@@ -9,6 +9,9 @@ uvicorn = {extras = ["standard"], version = "*"}
 alembic = "*"
 asyncpg = "*"
 sqlalchemy = "*"
+pyjwt = {extras = ["crypto"], version = "*"}
+bcrypt = "*"
+python-multipart = "*"
 
 [dev-packages]
 
