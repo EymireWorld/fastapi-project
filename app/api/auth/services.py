@@ -9,7 +9,10 @@ from .dependencies import encode_jwt, hash_password, validate_password
 from .schemas import TokenSchema, UserSingInSchema, UserSingUpSchema
 
 
-async def sing_in(session: AsyncSession, data: UserSingInSchema):
+async def sing_in(
+    session: AsyncSession,
+    data: UserSingInSchema
+):
     stmt = select(UserModel).where(UserModel.username == data.username)
     result = await session.execute(stmt)
     result = result.scalar()
@@ -31,7 +34,10 @@ async def sing_in(session: AsyncSession, data: UserSingInSchema):
     )
 
 
-async def sing_up(session: AsyncSession, data: UserSingUpSchema):
+async def sing_up(
+    session: AsyncSession,
+    data: UserSingUpSchema
+):
     values = {
         'username': data.username,
         'first_name': data.first_name,

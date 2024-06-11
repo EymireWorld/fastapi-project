@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Query, status
 
-from app.dependencies import session_dep, current_user_dep
+from app.dependencies import current_user_dep, session_dep
 from app.schemas import TaskShowSchema
 
 from . import services
@@ -8,7 +8,6 @@ from .schemas import TaskCreateSchema, TaskUpdateSchema
 
 
 router = APIRouter(
-    prefix='/tasks',
     tags=['Tasks']
 )
 
@@ -16,23 +15,24 @@ router = APIRouter(
 @router.get('')
 async def get_tasks(
     session: session_dep,
-    current_user: current_user_dep,
     limit: int = Query(10, ge=5, le=100),
     offset: int = Query(0, ge=0)
 ) -> list[TaskShowSchema] | None:
-    return await services.get_tasks(session, current_user.id, limit, offset)
+    return await services.get_tasks(session, limit, offset)
 
 
 @router.get('/{task_id}')
 async def get_task(
     session: session_dep,
-    current_user: current_user_dep,
     task_id: int
 ) -> TaskShowSchema | None:
-    return await services.get_task(session, current_user.id, task_id)
+    return await services.get_task(session, task_id)
 
 
-@router.post('')
+@router.post(
+    '',
+    status_code=status.HTTP_201_CREATED
+)
 async def create_task(
     session: session_dep,
     current_user: current_user_dep,

@@ -8,7 +8,8 @@ engine = create_async_engine(
 SessionLocal = async_sessionmaker(
     bind=engine,
     autoflush=False,
-    autocommit=False
+    autocommit=False,
+    expire_on_commit=False
 )
 
 

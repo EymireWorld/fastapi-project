@@ -8,8 +8,8 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.users.services import get_user
-from app.settings import JWT_TOKEN_LIFETIME_IN_MINUTES
 from app.database import get_session
+from app.settings import JWT_TOKEN_LIFETIME_IN_MINUTES
 
 
 def encode_jwt(user_id: int) -> str:

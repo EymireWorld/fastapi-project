@@ -1,13 +1,17 @@
 from fastapi import APIRouter
 
-from app.dependencies import session_dep, current_user_dep
+from app.dependencies import current_user_dep, session_dep
 
 from . import services
-from .schemas import TokenSchema, UserSingInSchema, UserSingUpSchema, UserProfileSchema
+from .schemas import (
+    TokenSchema,
+    UserProfileSchema,
+    UserSingInSchema,
+    UserSingUpSchema
+)
 
 
 router = APIRouter(
-    prefix='/auth',
     tags=['Auth']
 )
 
@@ -28,6 +32,6 @@ async def sign_up(
     return await services.sing_up(session, data)
 
 
-@router.get('/me', response_model= UserProfileSchema)
-async def profile(current_user: current_user_dep):
+@router.get('/me')
+async def profile(current_user: current_user_dep) -> UserProfileSchema:
     return current_user

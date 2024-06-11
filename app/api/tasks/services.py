@@ -8,24 +8,32 @@ from app.models import TaskModel
 from .schemas import TaskCreateSchema, TaskUpdateSchema
 
 
-async def get_tasks(session: AsyncSession, user_id: int, limit: int, offset: int):
-    stmt = select(TaskModel).where(TaskModel.user_id == user_id)
+async def get_tasks(
+    session: AsyncSession,
+    limit: int,
+    offset: int
+):
+    stmt = select(TaskModel)
     result = await session.execute(stmt)
-    
+
     return result.scalars().all()[offset:][:limit]
 
 
-async def get_task(session: AsyncSession, user_id: int, task_id: int):
-    stmt = select(TaskModel).where(and_(
-        TaskModel.id == task_id,
-        TaskModel.user_id == user_id
-    ))
+async def get_task(
+    session: AsyncSession,
+    task_id: int
+):
+    stmt = select(TaskModel).where(TaskModel.id == task_id)
     result = await session.execute(stmt)
-    
+
     return result.scalar()
 
 
-async def create_task(session: AsyncSession, user_id: int, data: TaskCreateSchema):
+async def create_task(
+    session: AsyncSession,
+    user_id: int,
+    data: TaskCreateSchema
+):
     stmt = insert(TaskModel).values(
         user_id= user_id,
         title= data.title,
@@ -36,10 +44,15 @@ async def create_task(session: AsyncSession, user_id: int, data: TaskCreateSchem
     result = await session.execute(stmt)
     await session.commit()
 
-    return result
+    return result.scalar()
 
 
-async def update_task(session: AsyncSession, user_id: int, task_id: int, data: TaskUpdateSchema):
+async def update_task(
+    session: AsyncSession,
+    user_id: int,
+    task_id: int,
+    data: TaskUpdateSchema
+):
     stmt = update(TaskModel).where(and_(
         TaskModel.id == task_id,
         TaskModel.user_id == user_id
@@ -48,7 +61,11 @@ async def update_task(session: AsyncSession, user_id: int, task_id: int, data: T
     await session.commit()
 
 
-async def delete_task(session: AsyncSession, user_id: int, task_id: int):
+async def delete_task(
+    session: AsyncSession,
+    user_id: int,
+    task_id: int
+):
     stmt = delete(TaskModel).where(and_(
         TaskModel.id == task_id,
         TaskModel.user_id == user_id

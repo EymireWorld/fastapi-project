@@ -7,7 +7,6 @@ from . import services
 
 
 router = APIRouter(
-    prefix='/users',
     tags=['Users']
 )
 
@@ -17,7 +16,7 @@ async def get_users(
     limit: int = Query(10, ge=5, le=100),
     offset: int = Query(ge=0)
 ) -> list[UserShowSchema] | None:
-    return await services.get_tasks(session, limit, offset)
+    return await services.get_users(session, limit, offset)
 
 
 @router.get('/{user_id}')
@@ -25,4 +24,4 @@ async def get_user(
     session: session_dep,
     user_id: int
 ) -> UserShowSchema | None:
-    return await services.get_task(session, user_id)
+    return await services.get_user(session, user_id)
