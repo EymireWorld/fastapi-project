@@ -5,10 +5,11 @@ import bcrypt
 import jwt
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.api.users.services import get_user
 from app.database import get_session
+from app.models import UserModel
 from app.settings import JWT_TOKEN_LIFETIME_IN_MINUTES
 
 
@@ -74,5 +75,8 @@ async def get_current_user(
             status_code= status.HTTP_403_FORBIDDEN,
             detail= 'Expired token.'
         )
-    
-    return await get_user(session, data['user_id'])
+
+    stmt = select(UserModel).where(UserModel.id == data['user_id'])
+    result = await session.execute(stmt)
+
+    return result.scalar()

@@ -16,18 +16,18 @@ async def sing_in(
     stmt = select(UserModel).where(UserModel.username == data.username)
     result = await session.execute(stmt)
     result = result.scalar()
-    
-    if not result:
+
+    if (not result) and (not validate_password(data.password, result.hashed_password)):
         raise HTTPException(
             status_code= status.HTTP_401_UNAUTHORIZED,
-            detail= 'Invalid username.'
+            detail= 'Invalid username or password.'
         )
-    elif not validate_password(data.password, result.hashed_password):
+    if not result.is_active:
         raise HTTPException(
-            status_code= status.HTTP_401_UNAUTHORIZED,
-            detail= 'Invalid password.'
-        )
-    
+        status_code= status.HTTP_401_UNAUTHORIZED,
+        detail= 'User inactive.'
+    )
+
     return TokenSchema(
         access_token= encode_jwt(result.id),
         token_type= 'Bearer'

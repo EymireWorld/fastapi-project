@@ -1,12 +1,13 @@
-from pydantic import BaseModel
+from pydantic import Field
+from app.schemas import Schema
 
 
-class TaskCreateSchema(BaseModel):
-    title: str
-    description: str | None = None
+class TaskCreateSchema(Schema):
+    title: str = Field(max_length=64)
+    description: str | None = Field(None, max_length=256)
 
 
-class TaskUpdateSchema(BaseModel):
-    title: str | None = None
-    description: str | None = None
+class TaskUpdateSchema(Schema):
+    title: str | None = Field(None, max_length=64)
+    description: str | None = Field(None, max_length=256)
     is_completed: bool | None = None
